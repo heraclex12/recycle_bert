@@ -95,7 +95,7 @@ class TransformerWithBertEncoder(FairseqEncoder):
 
         self.fine_tuning = args.fine_tuning
         self.bert_model = BertModel.from_pretrained(args.bert_model,
-                                                    output_hidden_states=True)
+                                                    output_hidden_states=True, return_dict=False)
 
     def forward(self, src_tokens, src_lengths, cls_input=None, return_all_hiddens=False, **unused):
         """
