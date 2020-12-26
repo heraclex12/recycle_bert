@@ -52,7 +52,7 @@ cat $BERT_MODEL/vocab.txt \
 	  > $DATA/dict.$SRC.txt
 
 ### Encode corpora into binary sets.
-python3.7 $CODE/preprocess.py \
+python $CODE/preprocess.py \
     --workers 4 \
     --source-lang $SRC --target-lang $TRG \
     --srcdict $DATA/dict.$SRC.txt \
