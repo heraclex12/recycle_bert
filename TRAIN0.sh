@@ -17,7 +17,7 @@ TRG=de
 # Download the corpus
 #
 mkdir -p $CORPUS
-for prefix in newstest2012 newstest2013 newstest2014 newstest2015; do
+for prefix in train newstest2012 newstest2013 newstest2014 newstest2015; do
     for lang in $SRC $TRG; do
 	file=$prefix.$lang
 	if [ !  -f $CORPUS/$file ]; then
@@ -82,7 +82,7 @@ bert_decode () {
 		  > $CORPUS/${testset}.bpe.$lang
 }
 
-for testset in newstest2012 newstest2013 newstest2014 newstest2015; do
+for testset in train newstest2012 newstest2013 newstest2014 newstest2015; do
     sp_decode   $TRG $testset &
     bert_decode $SRC $testset $BERT_MODEL &
     wait
