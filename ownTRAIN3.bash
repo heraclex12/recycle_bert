@@ -17,10 +17,10 @@ TRG=sparql
 
 MODEL_STAGE1=model.stage1
 MODEL_STAGE2=model.stage2
-DROPOUT=0.15
+DROPOUT=0.3
 LR=0.00008
 WARMUP_EPOCHS=1
-TRAIN_EPOCHS=60
+TRAIN_EPOCHS=500
 
 ### Set the mini-batch size to around 500 sentences.
 GPUID=
@@ -96,8 +96,9 @@ tuning () {
 	--dropout $DROPOUT \
 	--min-lr '1e-09' --lr-scheduler inverse_sqrt \
 	--weight-decay 0.0001 \
+	--save-interval 100 \
 	--criterion label_smoothed_cross_entropy \
-	--warmup-updates $WARMUP --warmup-init-lr '1e-07' \
+	--warmup-updates 4000 --warmup-init-lr '1e-07' \
 	--save-dir $model
     date
 }
