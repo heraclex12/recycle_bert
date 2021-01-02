@@ -19,7 +19,7 @@ MODEL_STAGE1=model.stage1
 DROPOUT=0.15
 LR=0.0004
 WARMUP_EPOCHS=5
-TRAIN_EPOCHS=20
+TRAIN_EPOCHS=200
 
 
 ### Set the mini-batch size to around 500 sentences.
@@ -93,8 +93,9 @@ training () {
 	--dropout $DROPOUT \
 	--min-lr '1e-09' --lr-scheduler inverse_sqrt \
 	--weight-decay 0.0001 \
+	--save-interval 50 \
 	--criterion label_smoothed_cross_entropy \
-	--warmup-updates $WARMUP --warmup-init-lr '1e-07' \
+	--warmup-updates 4000 --warmup-init-lr '1e-07' \
 	--save-dir $model
     date
 }
