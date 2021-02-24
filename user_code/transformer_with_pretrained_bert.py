@@ -153,6 +153,8 @@ class TransformerWithBertEncoder(FairseqEncoder):
             encoder_padding_mask=encoder_padding_mask,  # B x T
             encoder_embedding=encoder_embedding,  # B x T x C
             encoder_states=encoder_states,  # List[T x B x C]
+            src_tokens=None,
+            src_lengths=None,
         )
 
     def reorder_encoder_out(self, encoder_out, new_order):
@@ -166,22 +168,45 @@ class TransformerWithBertEncoder(FairseqEncoder):
         Returns:
             *encoder_out* rearranged according to *new_order*
         """
-        if encoder_out.encoder_out is not None:
-            encoder_out = encoder_out._replace(
-                encoder_out=encoder_out.encoder_out.index_select(1, new_order)
-            )
-        if encoder_out.encoder_padding_mask is not None:
-            encoder_out = encoder_out._replace(
-                encoder_padding_mask=encoder_out.encoder_padding_mask.index_select(0, new_order)
-            )
-        if encoder_out.encoder_embedding is not None:
-            encoder_out = encoder_out._replace(
-                encoder_embedding=encoder_out.encoder_embedding.index_select(0, new_order)
-            )
-        if encoder_out.encoder_states is not None:
-            for idx, state in enumerate(encoder_out.encoder_states):
-                encoder_out.encoder_states[idx] = state.index_select(1, new_order)
-        return encoder_out
+        encoder_padding_mask: Optional[Tensor] = encoder_out.encoder_padding_mask
+        encoder_embedding: Optional[Tensor] = encoder_out.encoder_embedding
+
+        new_encoder_out = (
+            encoder_out.encoder_out
+            if encoder_out.encoder_out is None
+            else encoder_out.encoder_out.index_select(1, new_order)
+        )
+        new_encoder_padding_mask = (
+            encoder_padding_mask
+            if encoder_padding_mask is None
+            else encoder_padding_mask.index_select(0, new_order)
+        )
+        new_encoder_embedding = (
+            encoder_embedding
+            if encoder_embedding is None
+            else encoder_embedding.index_select(0, new_order)
+        )
+        src_tokens = encoder_out.src_tokens
+        if src_tokens is not None:
+            src_tokens = src_tokens.index_select(0, new_order)
+
+        src_lengths = encoder_out.src_lengths
+        if src_lengths is not None:
+            src_lengths = src_lengths.index_select(0, new_order)
+
+        encoder_states = encoder_out.encoder_states
+        if encoder_states is not None:
+            for idx, state in enumerate(encoder_states):
+                encoder_states[idx] = state.index_select(1, new_order)
+
+        return EncoderOut(
+            encoder_out=new_encoder_out,  # T x B x C
+            encoder_padding_mask=new_encoder_padding_mask,  # B x T
+            encoder_embedding=new_encoder_embedding,  # B x T x C
+            encoder_states=encoder_states,  # List[T x B x C]
+            src_tokens=src_tokens,  # B x T
+            src_lengths=src_lengths,  # B x 1
+        )
 
 
 
