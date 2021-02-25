@@ -1,8 +1,10 @@
-# Recycling a Pre-trained BERT Encoder for Neural Machine Translation (Imamura and Sumita, 2019)
+# Recycling a Pre-trained BERT Encoder for Neural Machine Translation
+
+This repo is forked from [kenji-imamura/recycle_bert](https://github.com/kenji-imamura/recycle_bert) and is modified for fairseq==0.10.2 and torch==1.7.0
 
 This example replaces the Transformer-based fairseq encoder with a
-pre-trained BERT encoder.  Based on the fairseq v0.9.0, the paper
-[https://www.aclweb.org/anthology/D19-5603/] is implemented.
+pre-trained BERT encoder. 
+
 
 ## Example usage
 This example assumes the following data.
@@ -207,9 +209,3 @@ necessary in the fine-tuning and evaluation stages.
   url       = "https://www.aclweb.org/anthology/D19-5603/",
 }
 ```
-
-## Acknowledgement
-
-This work was supported by the "Research and Development of Enhanced
-Multilingual and Multipurpose Speech Translation Systems" a program of
-the Ministry of Internal Affairs and Communications, Japan.
