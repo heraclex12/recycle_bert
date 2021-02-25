@@ -12,25 +12,20 @@ This example assumes the following data.
 - The corpus used here is 
 [WMT-2014 En-De Corpus](https://nlp.stanford.edu/projects/nmt/data/wmt14.en-de/)
 preprocessed by the Stanford NLP Group.
-- For the pre-trained BERT model,
-[Google's uncased BERT-base model](https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-12_H-768_A-12.zip)
-is used.
 
 ### Requirements
 This example is based on the [fairseq](https://github.com/pytorch/fairseq)
 and uses [transformers](https://github.com/huggingface/transformers)
 for applying pre-trained BERT models.
-If you convert the BERT models from TensorFlow to PyTorch, the [TensorFlow](https://www.tensorflow.org/) library is also required.
 ```
-pip3 install fairseq
+pip3 install fairseq==0.10.2
 pip3 install transformers
-pip3 install tensorflow
 ```
 
 ### Directories / paths
 ```
 #! /bin/bash
-export BERT_MODEL=./uncased_L-12_H-768_A-12
+export BERT_MODEL=bert-base-uncased
 export CODE=./user_code
 export CORPUS=./corpus
 export DATA=./data
@@ -39,23 +34,6 @@ export MODEL_STAGE2=./model.stage2
 export PYTHONPATH="$CODE:$PYTHONPATH"
 ```
 
-### Conversion
-To use pre-trained BERT models for the TensorFlow library in the
-fairseq translator, they have to be converted into the models for the
-PyTorch library.
-
-- You need the TensorFlow library to convert the models.
-- If you have already installed
-[transformers](https://github.com/huggingface/transformers), there is
-the `transformers-cli` command in your path.
-```
-cd $BERT_MODEL
-ln -s bert_config.json config.json
-transformers-cli convert --model_type bert \
-  --tf_checkpoint bert_model.ckpt \
-  --config bert_config.json \
-  --pytorch_dump_output pytorch_model.bin
-```
 
 ### Tokenization
 The source sides of corpora
@@ -195,7 +173,7 @@ This example reads settings from the BERT model for creating the
 uninitialized model.  This is the reason that `--bert-model` is
 necessary in the fine-tuning and evaluation stages.
 
-## Citation
+## References
 ```bibtex
 @inproceedings{imamura-sumita-2019-recycling,
   title     = "Recycling a Pre-trained {BERT} Encoder for Neural Machine Translation",
